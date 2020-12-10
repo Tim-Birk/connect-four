@@ -256,6 +256,15 @@ const newGame = () => {
   board = []; // array of rows, each row is array of cells  (board[y][x])
   gameOver = false;
 
+  removePreviousHtmlBoard();
+  addNewHtmlBoard()
+  setPlayerTurnInfo();
+  makeBoard();
+
+  makeHtmlBoard();
+};
+
+const removePreviousHtmlBoard = () => {
   // remove old DOM elements
   const oldLegs = document.querySelectorAll(".leg");
   for (leg of oldLegs) {
@@ -263,7 +272,9 @@ const newGame = () => {
   }
   const oldBoard = document.getElementById("board");
   oldBoard.remove();
+};
 
+const addNewHtmlBoard = () => {
   // add new DOM elements
   const newLeftLeg = document.createElement("div");
   newLeftLeg.classList.add("leg");
@@ -277,10 +288,6 @@ const newGame = () => {
   game.append(newLeftLeg);
   game.append(newBoard);
   game.append(newRightLeg);
-  setPlayerTurnInfo();
-  makeBoard();
-
-  makeHtmlBoard();
 };
 
 setPlayerTurnInfo();
