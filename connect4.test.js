@@ -1,7 +1,6 @@
 describe("board tests", () => {
   beforeEach(() => {
-    board = [];
-    makeBoard();
+    board = makeBoard(HEIGHT, WIDTH);
   });
 
   it("should make an array with the length of HEIGHT where each item is its own array of null valueswith a length of WIDTH", () => {
@@ -29,8 +28,7 @@ describe("board tests", () => {
   });
 
   afterEach(() => {
-    board = [];
-    makeBoard();
+    board = makeBoard(HEIGHT, WIDTH);
   });
 });
 
@@ -70,8 +68,7 @@ describe("HtmlBoard tests", () => {
 describe("checkForWin tests", () => {
   beforeEach(() => {
     currPlayer = 1;
-    board = [];
-    makeBoard();
+    board = makeBoard(HEIGHT, WIDTH);
   });
 
   it("should return true where 4 consecutive colors match vertically on checkForWin()", () => {
@@ -116,8 +113,7 @@ describe("checkForWin tests", () => {
 
   afterEach(() => {
     currPlayer = 1;
-    board = [];
-    makeBoard();
+    board = makeBoard(HEIGHT, WIDTH);
     removePreviousHtmlBoard();
     addNewHtmlBoard();
     makeHtmlBoard();
@@ -126,8 +122,7 @@ describe("checkForWin tests", () => {
 
 describe("checkForTie tests", () => {
   beforeEach(() => {
-    board = [];
-    makeBoard();
+    board = makeBoard(HEIGHT, WIDTH);
   });
 
   it("should return true when every value in the board sub arrays is not null on checkForTie()", () => {
@@ -142,7 +137,6 @@ describe("checkForTie tests", () => {
   });
 
   afterEach(() => {
-    board = [];
-    makeBoard();
+    board = makeBoard(HEIGHT, WIDTH);
   });
 });

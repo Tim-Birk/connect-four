@@ -19,11 +19,13 @@ newGameButton.addEventListener("click", () => newGame());
  *    board = array of rows, each row is array of cells  (board[y][x])
  */
 
-const makeBoard = () => {
+const makeBoard = (height, width) => {
   // Set "board" to empty HEIGHT x WIDTH matrix array
-  for (let y = 0; y < HEIGHT; y++) {
-    board.push(new Array(WIDTH).fill(null));
+  let localBoard = [];
+  for (let y = 0; y < height; y++) {
+    localBoard.push(new Array(width).fill(null));
   }
+  return localBoard;
 };
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
@@ -68,15 +70,13 @@ const updateBoardWithPlayer = (x, y, p) => {
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
 const findSpotForCol = (x) => {
-  let y = null;
   // loop backwords on each row for the given column x to find first available slot
-  for (let i = 5; i >= 0; i--) {
+  for (let i = HEIGHT - 1; i >= 0; i--) {
     if (!board[i][x]) {
-      y = i;
-      break;
+      return i;
     }
   }
-  return y;
+  return null;
 };
 
 /** placeInTable: update DOM to place piece into HTML table of board */
@@ -96,7 +96,10 @@ const placeInTable = (y, x) => {
 /** endGame: announce game end */
 
 const endGame = (msg) => {
-  alert(msg);
+  gameOver = true;
+  setTimeout(() => {
+    alert(msg);
+  }, 50);
 };
 
 /** handleClick: handle click of column top to play piece */
@@ -113,13 +116,7 @@ const handleClick = (evt) => {
     return;
   }
 
-  // flash empty slots with color for falling effect
-  // get all tds in column up to y slot
-  for (let i = 0; i < y; i++) {
-    const slot = document.getElementById(`${i}-${x}`).firstChild;
-    delayColorSet(slot, currPlayer, 10);
-    delayColorSet(slot, currPlayer, 200);
-  }
+  flashColumnSlots(y, x);
 
   // place piece in board and add to HTML table
   placeInTable(y, x);
@@ -129,13 +126,11 @@ const handleClick = (evt) => {
 
   // check for win
   if (checkForWin()) {
-    gameOver = true;
     return endGame(`Player ${currPlayer} won!`);
   }
 
   // check for tie
   if (checkForTie()) {
-    gameOver = true;
     return endGame(`Tie Game!`);
   }
 
@@ -231,6 +226,16 @@ const checkForTie = () => {
   return true;
 };
 
+const flashColumnSlots = (y, x) => {
+  // flash empty slots with color for falling effect
+  // get all tds in column up to y slot
+  for (let i = 0; i < y; i++) {
+    const slot = document.getElementById(`${i}-${x}`).firstChild;
+    delayColorSet(slot, currPlayer, 10);
+    delayColorSet(slot, currPlayer, 200);
+  }
+};
+
 const delayColorSet = (slot, player, time) => {
   setTimeout(() => {
     slot.classList.toggle(`p${player}`);
@@ -243,21 +248,18 @@ const setPlayerTurnInfo = () => {
 
   playerPiece.classList.remove("p1");
   playerPiece.classList.remove("p2");
-  if (currPlayer === 1) {
-    playerPiece.classList.add("p1");
-  } else {
-    playerPiece.classList.add("p2");
-  }
+
+  playerPiece.classList.add(`p${currPlayer}`);
   playerNumber.innerText = `Player ${currPlayer} Turn`;
 };
 
 const newGame = () => {
   currPlayer = 1; // active player: 1 or 2
-  board = []; // array of rows, each row is array of cells  (board[y][x])
+  board = makeBoard(HEIGHT, WIDTH); // array of rows, each row is array of cells  (board[y][x])
   gameOver = false;
 
   removePreviousHtmlBoard();
-  addNewHtmlBoard()
+  addNewHtmlBoard();
   setPlayerTurnInfo();
   makeBoard();
 
@@ -291,5 +293,5 @@ const addNewHtmlBoard = () => {
 };
 
 setPlayerTurnInfo();
-makeBoard();
+board = makeBoard(HEIGHT, WIDTH);
 makeHtmlBoard();
